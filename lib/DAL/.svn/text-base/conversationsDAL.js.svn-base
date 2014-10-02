@@ -1,0 +1,63 @@
+/**
+conversations schema
+*/
+var mongoose = require('mongoose');
+var DBConnection = require('./dbConnection.js').DBConnection();
+var Schema = mongoose.Schema;
+
+var conversationsSchema = new Schema({
+	users: {type: [{type:Schema.Types.ObjectId, ref: 'users'}], required: true},
+	create_date: {type: Date, default:Date.now, required: true},
+	last_message: String,
+	last_message_date: Date,
+	last_message_is_chat: Boolean,
+	users_removed: {type: [{type:Schema.Types.ObjectId, ref: 'users'}]}
+});
+
+var conversations = DBConnection.model('conversations', conversationsSchema);
+
+ConversationsDAL = function(){};
+
+/**
+saves document to conversations collection
+*/
+ConversationsDAL.prototype.save = function(pConversation, pCallback){
+	var conversationObj = new conversations(pConversation);
+	conversationObj.save(function(err, conversation){
+		pCallback(err, conversation);
+	});
+};
+
+
+/**
+returns list of conversations for a user
+*/
+ConversationsDAL.prototype.findConversationsForUser = function(pUserID, pFieldNames, pSortBy, pCallback){
+    var query = conversations.find();
+    query.where('users').in([pUserID]);
+    //todo: filter out if user has removed this conversation from device
+    query.sort(pSortBy);
+    query.populate('users', 'name attributes', { _id:{$nin:[pUserID]} });	//get fields from users collection, exclude pUserID from users
+    query.select(pFieldNames);
+    query.exec(function(err, conversations){
+        pCallback(err, conversations);
+    });
+};
+
+
+/**
+validates if user1 is in a shared conversation with user2
+*/
+ConversationsDAL.prototype.validateUserInConversation = function(pUserID, pUserID2, pCallback){
+	var query = conversations.findOne();
+	query.where('users').in([pUserID]);
+	query.where('users').in([pUserID2]);
+	query.select('_id');
+	query.exec(function(err, conversation){
+		pCallback(err, conversation);
+	});
+};
+
+
+
+exports.ConversationsDAL = ConversationsDAL;
