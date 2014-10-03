@@ -2,8 +2,15 @@ var express = require('express');
 var router = express.Router();
 
 //oauth modules
-var passport	= require('passport'),
-	oauth2 		= require('../../lib/oauth2.js');
+var passport = require('passport');
+var oauth2 = require('../../lib/oauth2.js');
+
+//lib modules
+var JSONEnvelope 	= require('../../lib/BE/JSONEnvelope.js');
+var Log 			= require('../../lib/BE/Log.js');
+var accessTokensDAL = require('../../lib/DAL/accessTokensDAL.js');
+var LogDAL 			= require('../../lib/DAL/LogDAL.js');
+
 
 /**
 description: login - oauth access token retrieval with credentials

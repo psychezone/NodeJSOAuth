@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "express": "~4.2.0",
+    "express-validator": ">=0.3.0",
     "static-favicon": "~1.0.0",
     "morgan": "~1.0.0",
     "cookie-parser": "~1.0.1",
@@ -21,6 +22,7 @@
     "passport": "~0.1.12",
     "passport-local": "0.1.x",
     "passport-http": "0.2.x",
+    "passport-http-bearer": "1.0.1",
     "passport-oauth2-client-password": "0.1.x"
   }
 }

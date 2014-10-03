@@ -1,12 +1,14 @@
-var express         = require('express'),
-    path            = require('path'),
-    favicon         = require('static-favicon'),
-    logger          = require('morgan'),
-    cookieParser    = require('cookie-parser'),
-    bodyParser      = require('body-parser');
+var express             = require('express'),
+    expressValidator    = require('express-validator'),
+    path                = require('path'),
+    favicon             = require('static-favicon'),
+    logger              = require('morgan'),
+    cookieParser        = require('cookie-parser'),
+    bodyParser          = require('body-parser');
+    passport            = require('passport');
 
 var routes      = require('./routes/index');
-var users       = require('./routes/users');
+var users       = require('./routes/v1/users');
 var oauth       = require('./routes/v1/oauth');
 
 var app = express();
@@ -18,13 +20,18 @@ app.set('view engine', 'jade');
 app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
+app.use(expressValidator());
 app.use(bodyParser.urlencoded());
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public')))
+app.use(passport.initialize());
+app.use(passport.session()); 
+//passport config
+require('./passport-auth.js');
 
 app.use('/', routes);
-app.use('/users', users);
-app.use('/v1/oauth', oauth)
+app.use('/v1/users', users);
+app.use('/v1/oauth', oauth);
 
 /// catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -32,6 +39,7 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
+
 
 /// error handlers
 
