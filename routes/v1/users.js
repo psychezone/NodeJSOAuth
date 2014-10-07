@@ -3,20 +3,24 @@ var router = express.Router();
 
 //oauth modules
 var passport = require('passport');
-var oauth2 = require('../../lib/oauth2.js');
+
 
 //lib modules
-var JSONEnvelope 	= require('../../lib/BE/JSONEnvelope.js');
-var Log 			= require('../../lib/BE/Log.js');
-var usersDAL 		= require('../../lib/DAL/usersDAL.js');
-var LogDAL 			= require('../../lib/DAL/LogDAL.js');
+var JSONEnvelope 	= require('../../lib/BE/JSONEnvelope.js').JSONEnvelope;
+var Log 			= require('../../lib/BE/Log.js').Log;
+var AccessTokensDAL = require('../../lib/DAL/accessTokensDAL.js').AccessTokensDAL;
+var LogDAL 			= require('../../lib/DAL/logDAL.js').LogDAL;
+var UsersDAL 		= require('../../lib/DAL/usersDAL.js').UsersDAL;
 
+var accessTokensDAL		= new AccessTokensDAL(),
+	logDAL 				= new LogDAL(),
+	usersDAL			= new UsersDAL();
 
 /**
 description: creates a new user, returns back the user
 access level: valid client credentials
 */
-router.post('/', function(req, res){
+router.post('/', passport.authenticate(['basic', 'oauth2-client-password'], {session: false}), function(req, res){
 
 	var oUser = {
 		name: req.body.name,
