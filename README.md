@@ -5,14 +5,14 @@ OAuth2 implementation of user authentication in Node.js using Passport Bearer/Lo
 ## Introduction
 Example of running OAuth2 server on Node.js to authenticate users for use on a mobile app. 
 
-##URL convention
+## URL convention
 To easily allow versioning and deprecating of older versions of the API, I'm pre-pending the endpoints with /v1/ so that in the future, we can add /v2, /v3, etc.  
 __api.domain.com/v1/resource/element?param1=val1&param2=val2__
 
-##Format:
+## Format:
 By default, JSON is returned
 
-##API endpoints
+## API endpoints
 1. POST 	/users - add new user 
 
 2. GET		/users/:userID - get user’s current info 
